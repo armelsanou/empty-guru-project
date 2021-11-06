@@ -1,0 +1,273 @@
+<!--Loading-->
+<div class="row col-md-12 mb-5">
+  <div class="col md-5">
+  </div>
+  <div class="col md-7">
+        <span *ngIf="loadInscription === true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  </div>
+</div>
+<!--Loading-->
+<div class="row" *ngIf="loadInscription === false">
+  <div class="col-sm-12">
+    <!-- Tooltip Validation card start -->
+    <app-card [title]="'Inscription de FEDOUNG SANOU ARMEL 15T2309'" [headerContent]="'Inscription de : FEDOUNG SANOU ARMEL'" >
+      <form [formGroup]="inscriptionForm" (ngSubmit)="submitAction()">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"><strong>Matricule :</strong></label>
+          <div class="col-sm-10">
+          <input type="text" class="form-control tooltip-form" id="matricule" formControlName="matricule" name="matricule" placeholder="Entrez le matricule" (input)="matricule.value.length > 5 && onMatriculeChange()">
+          <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le matricule ne peut être vide." *ngIf="inscriptionForm.controls.matricule.errors?.required"><i class="text-danger icofont
+            icofont-close-circled"></i>
+          </div>
+          </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"><strong>Domaine :</strong></label>
+            <div class="col-sm-10">
+                <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="domaines && domaines.length > 0 " (change)="onDomainSelect($event)">
+                      <option value="">Sélectionner le domaine</option>
+                      <option *ngFor="let domain of domaines" value="{{domain.iddomaine}}">{{domain.codedomaine}} - {{domain.nom}}</option>
+                  </select>
+                <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="!domaines || domaines.length === 0 ">
+                      <option class="text-danger" disabled>Aucun enregistrement !</option>
+                  </select>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"><strong>Sous-domaine :</strong></label>
+          <div class="col-sm-10" *ngIf="sousDomainesFiltered.length === 0 && zeroResultat === '' ">
+              <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" *ngIf="sousDomaines && sousDomaines.length > 0 " (change)="onSousDomainSelect($event)">
+                    <option value="">Sélectionner le sous-domaine</option>
+                    <option *ngFor="let subdomain of sousDomaines" value="{{subdomain.idsousdomaine}}" disabled>{{subdomain.codesousdomaine}} - {{subdomain.nom}}</option>
+                </select>
+              <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" *ngIf="!sousDomaines || sousDomaines.length === 0 ">
+                    <option class="text-danger" disabled>Aucun enregistrement !</option>
+                </select>
+          </div>
+          <div class="col-sm-10" *ngIf="sousDomainesFiltered && sousDomainesFiltered.length > 0">
+            <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" (change)="onSousDomainSelect($event)">
+              <option value="">Sélectionner le sous-domaine</option>
+              <option *ngFor="let subdomain of sousDomainesFiltered" value="{{subdomain.idsousdomaine}}">{{subdomain.codesousdomaine}} - {{subdomain.nom}}</option>
+            </select>
+          </div>
+          <div class="col-sm-10" *ngIf="zeroResultat === 'rien' ">
+            <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control">
+              <option value="">Sélectionner le sous-domaine</option>
+              <option value="" disabled class="text-danger">rien à afficher</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"><strong>Filière :</strong></label>
+            <div class="col-sm-10" *ngIf="filieresFiltered.length === 0 && zeroResultatFiliere === '' ">
+                <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="filieres && filieres.length > 0 " (change)="onFiliereSelect($event)">
+                    <option value="">Sélectionner la filière</option>
+                    <option *ngFor="let filiere of filieres" value="{{filiere.idfiliere}}" disabled>{{filiere.codefiliere}} - {{filiere.nom}}</option>
+                </select>
+                <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="!filieres || filieres.length === 0 ">
+                    <option class="text-danger" disabled>Aucun enregistrement !</option>
+                </select>
+            </div>
+            <div class="col-sm-10" *ngIf="filieresFiltered && filieresFiltered.length > 0">
+                <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="filieresFiltered && filieresFiltered.length > 0 " (change)="onFiliereSelect($event)">
+                    <option value="">Sélectionner la filière</option>
+                    <option *ngFor="let filiere of filieresFiltered" value="{{filiere.idfiliere}}">{{filiere.codefiliere}} - {{filiere.nom}}</option>
+                </select>
+            </div>
+            <div class="col-sm-10" *ngIf="zeroResultatFiliere === 'rien' ">
+              <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control">
+                <option value="">Sélectionner la filière</option>
+                <option value="" disabled class="text-danger">rien à afficher</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"><strong>Spécialité :</strong></label>
+          <div class="col-sm-10" *ngIf="specialitesFiltered.length === 0 && zeroResultatSpecialite === '' ">
+              <select formControlName="nomSpecialite" name="nomSpecialite" id="nomSpecialite" class="form-control form-control" *ngIf="specialites && specialites.length > 0 " (change)="onSpecialiteSelect($event)">
+                  <option value="">Sélectionner la spécialité</option>
+                  <option *ngFor="let specialite of specialites" value="{{specialite.idspecialite}}" disabled>{{specialite.codespecialite}} - {{specialite.nom}}</option>
+              </select>
+              <select formControlName="nomSpecialite" name="nomSpecialite" id="nomSpecialite" class="form-control form-control" *ngIf="!specialites || specialites.length === 0 ">
+                  <option class="text-danger" disabled>Aucun enregistrement !</option>
+              </select>
+          </div>
+          <div class="col-sm-10" *ngIf="specialitesFiltered && specialitesFiltered.length > 0">
+            <select formControlName="nomSpecialite" name="nomSpecialite" id="nomSpecialite" class="form-control form-control" *ngIf="specialitesFiltered && specialitesFiltered.length > 0 " (change)="onSpecialiteSelect($event)">
+              <option value="">Sélectionner la spécialité</option>
+              <option *ngFor="let specialite of specialitesFiltered" value="{{specialite.idspecialite}}">{{specialite.codespecialite}} - {{specialite.nom}}</option>
+            </select>
+          </div>
+          <div class="col-sm-10" *ngIf="zeroResultatSpecialite === 'rien' ">
+            <select formControlName="nomSpecialite" name="nomSpecialite" id="nomSpecialite" class="form-control form-control">
+              <option value="">Sélectionner la spécialité</option>
+              <option value="" disabled class="text-danger" disabled>rien à afficher</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"><strong>Classe :</strong></label>
+            <div class="col-sm-10" *ngIf="classesFiltered.length === 0 && zeroResultatClasse === '' ">
+                <select formControlName="idclasse" name="idclasse" id="idclasse" class="form-control form-control" *ngIf="classes && classes.length > 0 " (change)="onClasseSelect($event)">
+                    <option value="">Sélectionner la classe</option>
+                    <option *ngFor="let class of classes" value="{{class.idclasse}}" disabled>{{class.codeclasse}} - {{class.nom}}</option>
+                </select>
+                <select formControlName="idclasse" name="idclasse" id="idclasse" class="form-control form-control" *ngIf="!classes || classes.length === 0 ">
+                    <option class="text-danger" disabled>Aucun enregistrement !</option>
+                </select>
+            </div>
+            <div class="col-sm-10" *ngIf="classesFiltered && classesFiltered.length > 0">
+                <select formControlName="idclasse" name="idclasse" id="idclasse" class="form-control form-control" *ngIf="classesFiltered && classesFiltered.length > 0 " (change)="onClasseSelect($event)">
+                    <option value="">Sélectionner la classe</option>
+                    <option *ngFor="let class of classesFiltered" value="{{class.idclasse}}">{{class.codeclasse}} - {{class.nom}}</option>
+                </select>
+            </div>
+            <div class="col-sm-10" *ngIf="zeroResultatClasse === 'rien' ">
+                <select formControlName="idclasse" name="idclasse" id="idclasse" class="form-control form-control">
+                    <option value="">Sélectionner la classe</option>
+                    <option value="" disabled class="text-danger">rien à afficher</option>
+                </select>
+            </div>
+        </div>
+        <!-- <div class="form-group row" *ngIf="nomEtudiant && nomEtudiant != null && nomEtudiant != '' ">
+          <label class="col-sm-2 col-form-label"><strong>Nom :</strong></label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control tooltip-form" id="nomEtud" formControlName="nomEtud" name="nomEtud" value="{{nomEtudiant}}" readonly>
+          </div>
+        </div> -->
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"><strong>Année :</strong></label>
+          <div class="col-sm-10">
+          <input type="month" class="form-control tooltip-form" id="annee" formControlName="annee" name="annee" placeholder="Entrez l'année">
+          <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="L'année ne peut être vide." *ngIf="inscriptionForm.controls.annee.errors?.required"><i class="text-danger icofont
+            icofont-close-circled"></i>
+          </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"><strong>Date :</strong></label>
+          <div class="col-sm-10">
+          <input type="date" class="form-control tooltip-form" id="dateInscription" formControlName="dateInscription" name="dateInscription" placeholder="Entrez la date d'inscription" readonly (change)="onDateSelect($event)">
+          <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="La date d'inscription ne peut être vide." *ngIf="inscriptionForm.controls.dateInscription.errors?.required"><i class="text-danger icofont icofont-close-circled"></i>
+          </div>
+          </div>
+        </div>
+        <div class="row col-sm-12">
+          <div [ngClass]="showCancelBtn ===
+                        true?'col-sm-5':'col-sm-6'"></div>
+          <div class="col-sm-6">
+            <button type="submit" class="btn btn-outline-primary
+              {{nomEtudiant}}
+              btn-sm waves-effect f-w-600 d-inline-block m-b-0" [disabled]="!inscriptionForm.valid || !nomEtudiant || nomEtudiant == '' ">
+              <span *ngIf="createLoad === true"
+                    class="spinner-border spinner-border-sm ml-2"
+                    role="status" aria-hidden="true">
+              </span>
+              <span *ngIf="updateLoad === true"
+                    class="spinner-border spinner-border-sm ml-2"
+                    role="status" aria-hidden="true">
+                            </span>
+              {{buttonAction}}
+            </button>
+            <button *ngIf="showCancelBtn === true || inscriptionForm.dirty" type="reset" class="btn btn-outline-danger btn-sm waves-effect
+                            f-w-600 d-inline-block m-b-0 ml-2" (click)="reset()">Annuler</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+    <!-- Tooltip Validation card end -->
+
+    <!-- All Domains Start-->
+    <app-card [title]="'Toutes les inscriptions de FEDOUNG SANOU ARMEL 15T2309 au courant de l\'année 2021 '" [headerContent]="'inscriptions enregistrées'">
+      <div class="dt-responsive" *ngIf="inscriptions">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+            <div>
+              <label class="label-control">Afficher
+                <select class="form-control input-sm full-data-show-entry" [(ngModel)]="rowsOnPage">
+                  <option [ngValue]="10">10</option>
+                  <option [ngValue]="25">25</option>
+                  <option [ngValue]="50">50</option>
+                  <option [ngValue]="100">100</option>
+                </select>
+                entrées
+              </label>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6">
+            <div style="text-align: right;">
+              <label>Rechercher:
+                <input type="search" [(ngModel)]="searchText" class="form-control input-sm full-data-search" placeholder="Rechercher ici">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered full-data-table" [mfData]="inscriptions | filter:searchText" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+            <thead>
+            <tr>
+              <th>
+                <mfDefaultSorter>Actions</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter>Matricule</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter>Classe</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter>Date inscription</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter>Année</mfDefaultSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="!isEmpty && totalRecords> 0">
+                <tr *ngFor="let item of inscriptions | filter:searchText">
+                  <td class="action-icon">
+                    <a href="javascript:;" class="m-r-15 crm-action-edit text-muted text-primary" (click)="fillFormBeforUpdating(item)"><i
+                      class="icofont icofont-ui-edit"></i>
+                    </a>
+                    <a href="javascript:;" class="crm-action-delete text-muted text-danger" (click)="deleteInscription(item)"><i
+                      class="icofont icofont-delete-alt"></i>
+                    </a>
+                  </td>
+                  <td>{{item.matricule}}</td>
+                  <ng-container *ngFor="let classe of classes">
+                      <td *ngIf="classe.idclasse === item.idclasse">{{classe?.codeclasse}} - {{classe?.nom}}</td>
+                  </ng-container>
+                  <td>{{item.dateinscription | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{item.annee}}</td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="isEmpty">
+                <tr>
+                  <td colspan="5">
+                    <div class="card text-center mt-3">
+                      <p class="mt-5 mb-2 text-danger">Aucun enregistrement !</p><br>
+                      <p class="mb-5">
+                        <button type="button" class="btn btn-outline-secondary btn-sm waves-effect f-w-600 d-inline-block">
+                          <i class="fa fa-refresh  m-r-5"></i>rafraichir
+                        </button>
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <mfBootstrapPaginator class="pagination-main f-right"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </app-card>
+    <!-- All Domains End -->
+  </div>
+</div>

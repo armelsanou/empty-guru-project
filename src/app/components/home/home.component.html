@@ -1,0 +1,273 @@
+<div class="pcoded" [attr.nav-type]="navType" [attr.theme-layout]="themeLayout" [attr.layout-type]="layoutType" [attr.vertical-placement]="verticalPlacement" [attr.vertical-layout]="verticalLayout" [attr.pcoded-device-type]="deviceType" [attr.vertical-nav-type]="verticalNavType"
+    [attr.vertical-effect]="verticalEffect" [attr.vnavigation-view]="vNavigationView" (window:resize)="onResize($event)">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+        <nav class="navbar header-navbar pcoded-header" [attr.pcoded-header-position]="pcodedHeaderPosition" [attr.header-theme]="headerTheme">
+            <div class="navbar-wrapper">
+                <div class="navbar-logo" [attr.logo-theme]="logoTheme">
+                    <a [routerLink]="['/components/home']">
+                        <img class="img-fluid" src="assets/images/logo_upac.jpg" alt="Theme-Logo" title="retour à l'accueil" />
+                    </a>
+                    <a (click)="onMobileMenu()" class="mobile-options">
+                        <i class="ti-more"></i>
+                    </a>
+                </div>
+
+                <div class="navbar-container">
+                    <div>
+                        <ul [@mobileMenuTop]="isCollapsedMobile" class="nav-right" [ngClass]="isCollapsedMobile">
+                            <li class="header-notification lng-dropdown">
+                                <a href="javascript:;" id="dropdown-active-item">
+                                    <img src="assets/images/flags/ENGLISH.jpg" alt=""> English
+                                </a>
+                                <ul class="show-notification">
+                                    <li>
+                                        <a href="javascript:;" data-lng="en">
+                                            <img src="assets/images/flags/ENGLISH.jpg" alt=""> English
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" data-lng="es">
+                                            <img src="assets/images/flags/SPAIN.jpg" alt=""> Spanish
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" data-lng="pt">
+                                            <img src="assets/images/flags/PORTO.jpg" alt=""> Portuguese
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" data-lng="fr">
+                                            <img src="assets/images/flags/FRANCE.jpg" alt=""> French
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="header-notification">
+                                <a href="javascript:;">
+                                    <i class="ti-bell"></i>
+                                    <span class="badge bg-c-pink"></span>
+                                </a>
+                                <ul class="show-notification">
+                                    <li>
+                                        <h6>Notifications</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">John Doe</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.
+                                                </p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Joseph William</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.
+                                                </p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="assets/images/avatar-5.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Sara Soudein</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.
+                                                </p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <a [routerLink]="['/']">
+                                    <img src="assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <span>John Doe</span>
+                                    <i class="ti-angle-down"></i>
+                                </a>
+                                <ul class="show-notification profile-notification">
+                                    <li>
+                                        <a [routerLink]="['/crm-contact']">
+                                            <i class="ti-settings"></i> Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/user/profile']">
+                                            <i class="ti-user"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/advance/notifications']">
+                                            <i class="ti-email"></i> My Messages
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/auth/lock-screen']" target="_blank">
+                                            <i class="ti-lock"></i> Lock Screen
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/auth/login/simple']">
+                                            <i class="ti-layout-sidebar-left"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav><br><br><br><br><br><br>
+        <div class="row col-md-12 mt-5 mb-5 container">
+            <div class="col-md-1"></div>
+            <div class="row col-md-11">
+                <!-- Card Feature Start -->
+                <div class="col-md-6 col-xl-3 home-module" (click)="goToProgramme()">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-blue">
+                                <i class="icofont icofont-wallet"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Programmes</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les programmes</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Feature Start -->
+                <div class="col-md-6 col-xl-3 home-module" (click)="goToDomaine()">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-blue">
+                                <i class="icofont icofont-wallet"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Domaines</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les domaines</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 home-module" (click)="goToInscription()">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-pink">
+                                <i class="icofont icofont-ui-user"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Inscriptions</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les inscriptions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 home-module">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-green">
+                                <i class="icofont icofont-copy-black"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Archives</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les archives</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 home-module">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-yellow">
+                                <i class="icofont icofont-cart"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Notes</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les notes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 home-module">
+                    <div class="card feature-card-box">
+                        <div class="card-block-big text-center">
+                            <div class="feature-icon bg-c-yellow">
+                                <i class="icofont icofont-cart"></i>
+                            </div>
+                            <h4 class="f-w-600 m-b-15 m-t-30">Paiements</h4>
+                            <p class="text-muted f-16 m-b-0">Gérer les paiements</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Feature End -->
+            </div>
+            <!-- <div class="col-md-1"></div> -->
+        </div>
+    </div>
+</div>
+
+<!-- <section class="wrapper">
+    <div class="container">
+
+    <div class="row">
+   <div class="col-sm-4"><div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tech,street');">
+           <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+          <div class="card-img-overlay d-flex flex-column">
+           <div class="card-body">
+              <small class="card-meta mb-2">Thought Leadership</small>
+              <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+             <small><i class="far fa-clock"></i> October 15, 2020</small>
+            </div>
+            <div class="card-footer">
+             <div class="media">
+    <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
+    <div class="media-body">
+      <h6 class="my-0 text-white d-block">Oz COruhlu</h6>
+       <small>Director of UI/UX</small>
+    </div>
+  </div>
+            </div>
+          </div>
+        </div></div>
+       <div class="col-sm-4"><div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tree,nature');">
+           <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tree,nature" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+          <div class="card-img-overlay d-flex flex-column">
+           <div class="card-body">
+              <small class="card-meta mb-2">Thought Leadership</small>
+              <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+             <small><i class="far fa-clock"></i> October 15, 2020</small>
+            </div>
+            <div class="card-footer">
+             <div class="media">
+    <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
+    <div class="media-body">
+      <h6 class="my-0 text-white d-block">Oz COruhlu</h6>
+       <small>Director of UI/UX</small>
+    </div>
+  </div>
+            </div>
+          </div>
+        </div></div>
+    <div class="col-sm-4"><div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?computer,design');">
+           <img class="card-img d-none" src="https://source.unsplash.com/600x900/?computer,design" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+          <div class="card-img-overlay d-flex flex-column">
+           <div class="card-body">
+              <small class="card-meta mb-2">Thought Leadership</small>
+              <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+             <small><i class="far fa-clock"></i> October 15, 2020</small>
+            </div>
+            <div class="card-footer">
+             <div class="media">
+    <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
+    <div class="media-body">
+      <h6 class="my-0 text-white d-block">Oz COruhlu</h6>
+       <small>Director of UI/UX</small>
+    </div>
+  </div>
+            </div>
+          </div>
+        </div></div>
+
+  </div>
+
+  </div>
+  </section> -->

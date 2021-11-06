@@ -1,0 +1,171 @@
+<!--Loading-->
+<div class="row col-md-12 mb-5">
+    <div class="col md-5">
+    </div>
+    <div class="col md-7">
+        <span *ngIf="loadSousDomaines === true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </div>
+</div>
+<!--Loading-->
+<div class="row" *ngIf="loadSousDomaines === false">
+    <div class="col-sm-12">
+        <!-- Tooltip Validation card start -->
+        <app-card [title]="'Enregistrement des sous-domains'" [headerContent]="'Formulaire d\'enregistrement des sous-domaines'">
+            <form [formGroup]="sousDomainForm" (ngSubmit)="submitAction()">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Domaine :</strong></label>
+                    <div class="col-sm-10">
+                        <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="domaines && domaines.length > 0 " (change)="onDomainSelect($event)">
+                            <option value="" selected>Sélectionner un domaine</option>
+                          <option *ngFor="let domain of domaines" value="{{domain.iddomaine}}">{{domain.codedomaine}} - {{domain.nom}}</option>
+                        </select>
+                        <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="!domaines || domaines.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Code :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="codeSousDomain" formControlName="codeSousDomain" name="codeSousDomain" placeholder="Entrez le code du sous-domaine :">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le code du Sous-Domaine ne peut être vide" *ngIf="sousDomainForm.controls.codeSousDomain.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Nom :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="nomSousDomain" formControlName="nomSousDomain" name="nomSousDomain" placeholder="Entrez le nom du sous-domaine">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le nom du Sous-Domaine ne peut être vide" *ngIf="sousDomainForm.controls.nomSousDomain.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Nom en anglais :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="nameSousDomain" formControlName="nameSousDomain" name="nameSousDomain" placeholder="Entrez le name du sous-domaine">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le name du Sous-Domaine ne peut être vide" *ngIf="sousDomainForm.controls.nameSousDomain.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Année :</strong></label>
+                    <div class="col-sm-10">
+                        <input class="form-control tooltip-form" type="month" id="yearSousDomain" formControlName="yearSousDomain" name="yearSousDomain" placeholder="Entrez l'année du sous-domaine" />
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="L'année du Sous-Domaine ne peut être vide" *ngIf="sousDomainForm.controls.yearSousDomain.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="row col-sm-12">
+                    <div [ngClass]="showCancelBtn === true?'col-sm-5':'col-sm-6'"></div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-outline-primary btn-sm waves-effect f-w-600 d-inline-block m-b-0" [disabled]="!sousDomainForm.valid">
+                            <span *ngIf="createLoad === true" 
+                            class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                            </span>
+                            <span *ngIf="updateLoad === true" 
+                            class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                            </span>
+                            {{buttonAction}}
+                        </button>
+                        <button *ngIf="showCancelBtn === true || sousDomainForm.dirty" type="reset" class="btn btn-outline-danger btn-sm waves-effect f-w-600 d-inline-block m-b-0 ml-2" (click)="reset()">Annuler</button>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+        <!-- Tooltip Validation card end -->
+
+        <!-- All sous-Domain Start-->
+        <app-card [title]="'Tous les Sous-domaines'" [headerContent]="'Sous-domaines enregistrés'">
+            <div class="dt-responsive" *ngIf="sousDomaines">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+                        <div>
+                            <label class="label-control">Afficher
+                                <select class="form-control input-sm full-data-show-entry" [(ngModel)]="rowsOnPage">
+                                <option [ngValue]="10">10</option>
+                                <option [ngValue]="25">25</option>
+                                <option [ngValue]="50">50</option>
+                                <option [ngValue]="100">100</option>
+                                </select>
+                                entrées
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <div style="text-align: right;">
+                            <label>Rechercher:
+                                <input type="search" [(ngModel)]="searchText" class="form-control input-sm full-data-search" placeholder="Rechercher ici">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered full-data-table" [mfData]="sousDomaines | filter:searchText" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <mfDefaultSorter>Actions</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Code</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Domaine</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Nom</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Name</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Année</mfDefaultSorter>
+                                </th>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="!isEmpty && totalRecords > 0">
+                                <tr *ngFor="let item of mf.data | filter:searchText">
+                                    <td class="action-icon">
+                                        <a href="javascript:;" class="m-r-15 crm-action-edit text-muted text-primary" (click)="fillFormBeforUpdating(item)"><i
+                                        class="icofont icofont-ui-edit"></i></a>
+                                        <a href="javascript:;" class="crm-action-delete text-muted text-danger" (click)="deleteSousDomaine(item.idsousdomaine)"><i
+                                        class="icofont icofont-delete-alt"></i></a>
+                                    </td>
+                                    <td>{{item.codesousdomaine}}</td>
+                                    <ng-container *ngFor="let domain of domaines">
+                                        <td *ngIf="domain.iddomaine === item.iddomaine">{{domain.nom}} ({{domain.name}})</td>
+                                    </ng-container>
+                                    <td>{{item.nom}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.annee}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="isEmpty">
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="card text-center mt-3">
+                                            <p class="mt-5 mb-2 text-danger">Aucun enregistrement !</p><br>
+                                            <p class="mb-5">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm waves-effect f-w-600 d-inline-block">
+                                          <i class="fa fa-refresh m-r-5"></i>rafraichir
+                                        </button>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <mfBootstrapPaginator class="pagination-main f-right"></mfBootstrapPaginator>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </app-card>
+        <!-- All sous-Domain End -->
+    </div>
+</div>

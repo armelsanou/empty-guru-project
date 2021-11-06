@@ -1,0 +1,220 @@
+<!--Loading-->
+<div class="row col-md-12 mb-5">
+    <div class="col md-5">
+    </div>
+    <div class="col md-7">
+        <span *ngIf="loadEcs === true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </div>
+</div>
+<!--Loading-->
+<div class="row" *ngIf="loadEcs === false">
+    <div class="col-sm-12">
+        <!-- Tooltip Validation card start -->
+        <app-card [title]="'Enregistrement des ecs'" [headerContent]="'Formulaire d\'enregistrement des ecs'">
+            <form [formGroup]="ecForm" (ngSubmit)="submitAction()">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Domaine :</strong></label>
+                    <div class="col-sm-10">
+                        <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="domaines && domaines.length > 0 " (change)="onDomainSelect($event)">
+                            <option value="">Sélectionner le domaine</option>
+                            <option *ngFor="let domain of domaines" value="{{domain.iddomaine}}">{{domain.codedomaine}} - {{domain.nom}}</option>
+                        </select>
+                        <select formControlName="nomDomain" name="nomDomain" id="nomDomain" class="form-control form-control" *ngIf="!domaines || domaines.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Sous-domaine :</strong></label>
+                    <div class="col-sm-10" *ngIf="sousDomainesFiltered.length === 0 && zeroResultat === '' ">
+                        <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" *ngIf="sousDomaines && sousDomaines.length > 0 " (change)="onSousDomainSelect($event)">
+                            <option value="">Sélectionner le sous-domaine</option>
+                            <option *ngFor="let subdomain of sousDomaines" value="{{subdomain.idsousdomaine}}" disabled>{{subdomain.codesousdomaine}} - {{subdomain.nom}}</option>
+                        </select>
+                        <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" *ngIf="!sousDomaines || sousDomaines.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div>
+                   <div class="col-sm-10" *ngIf="sousDomainesFiltered && sousDomainesFiltered.length > 0">
+                        <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control" (change)="onSousDomainSelect($event)">
+                            <option value="">Sélectionner le sous-domaine</option>
+                            <option *ngFor="let subdomain of sousDomainesFiltered" value="{{subdomain.idsousdomaine}}">{{subdomain.codesousdomaine}} - {{subdomain.nom}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-10" *ngIf="zeroResultat === 'rien' ">
+                        <select formControlName="nomSousDomaine" name="nomSousDomaine" id="nomSousDomaine" class="form-control form-control">
+                            <option value="">Sélectionner le sous-domaine</option>
+                            <option class="text-danger" value="" disabled>rien à afficher</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Filière :</strong></label>
+                    <div class="col-sm-10" *ngIf="filieresFiltered.length === 0 && zeroResultatFiliere === '' ">
+                        <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="filieres && filieres.length > 0 " (change)="onFiliereSelect($event)">
+                            <option value="">Sélectionner la filière</option>
+                            <option *ngFor="let filiere of filieres" value="{{filiere.idfiliere}}" disabled>{{filiere.codefiliere}} - {{filiere.nom}}</option>
+                        </select>
+                        <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="!filieres || filieres.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-10" *ngIf="filieresFiltered && filieresFiltered.length > 0">
+                        <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="filieres && filieres.length > 0 " (change)="onFiliereSelect($event)">
+                            <option value="">Sélectionner la filière</option>
+                            <option *ngFor="let filiere of filieresFiltered" value="{{filiere.idfiliere}}">{{filiere.codefiliere}} - {{filiere.nom}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-10" *ngIf="zeroResultatFiliere === 'rien' ">
+                        <select formControlName="filiere" name="filiere" id="filiere" class="form-control form-control" *ngIf="filieres && filieres.length > 0 " (change)="onFiliereSelect($event)">
+                            <option value="">Sélectionner la filière</option>
+                            <option class="text-danger" value="" disabled>rien à afficher</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Code :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="codeEc" formControlName="codeEc" name="codeEc" placeholder="Entrez le code">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le code ne peut être vide." *ngIf="ecForm.controls.codeEc.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Nom :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="nomEc" formControlName="nomEc" name="nomEc" placeholder="Entrez le nom">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le nom ne peut être vide." *ngIf="ecForm.controls.nomEc.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Nom en anglais :</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control tooltip-form" id="nameEc" formControlName="nameEc" name="nameEc" placeholder="Entrez le name">
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Le name ne peut être vide." *ngIf="ecForm.controls.nameEc.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Année :</strong></label>
+                    <div class="col-sm-10">
+                        <input class="form-control tooltip-form" type="month" formControlName="yearEc" name="yearEc" placeholder="Entrez l'année" />
+                        <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="L'année ne peut être vide." *ngIf="ecForm.controls.yearEc.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+                    </div>
+                </div>
+                <div class="row col-sm-12">
+                    <div [ngClass]="showCancelBtn === true?'col-sm-5':'col-sm-6'"></div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-outline-primary btn-sm waves-effect f-w-600 d-inline-block m-b-0" [disabled]="!ecForm.valid">
+                      <span *ngIf="createLoad === true" 
+                        class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                      </span>
+                      <span *ngIf="updateLoad === true" 
+                        class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                      </span>
+                      {{buttonAction}}
+                    </button>
+                        <button *ngIf="showCancelBtn === true || ecForm.dirty" type="reset" class="btn btn-outline-danger btn-sm waves-effect f-w-600 d-inline-block m-b-0 ml-2" (click)="reset()">Annuler</button>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+        <!-- Tooltip Validation card end -->
+
+        <!-- All ecs Start-->
+        <app-card [title]="'Toutes les ecs'" [headerContent]="'Ecs enregistrés'">
+            <div class="dt-responsive" *ngIf="ecs">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+                        <div>
+                            <label class="label-control">Afficher
+                              <select class="form-control input-sm full-data-show-entry" [(ngModel)]="rowsOnPage">
+                              <option [ngValue]="10">10</option>
+                              <option [ngValue]="25">25</option>
+                              <option [ngValue]="50">50</option>
+                              <option [ngValue]="100">100</option>
+                              </select>
+                              entrées
+                          </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <div style="text-align: right;">
+                            <label>Rechercher:
+                              <input type="search" [(ngModel)]="searchText" class="form-control input-sm full-data-search"
+                              placeholder="Rechercher ici">
+                          </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered full-data-table" [mfData]="ecs | filter:searchText" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <mfDefaultSorter>Actions</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Code</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Filière</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Nom</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Name</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Année</mfDefaultSorter>
+                                </th>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="!isEmpty">
+                                <tr *ngFor="let item of mf.data | filter:searchText">
+                                    <td class="action-icon">
+                                        <a href="javascript:;" class="m-r-15 crm-action-edit text-muted text-primary" (click)="fillFormBeforUpdating(item)"><i
+                                      class="icofont icofont-ui-edit"></i></a>
+                                        <a href="javascript:;" class="crm-action-delete text-muted text-danger" (click)="deleteEc(item.idec)"><i
+                                      class="icofont icofont-delete-alt"></i></a>
+                                    </td>
+                                    <td>{{item.codeec}}</td>
+                                    <ng-container *ngFor="let fil of filieres">
+                                        <td *ngIf="fil.idfiliere === item.idfiliere">{{fil.nom}} ({{fil.name}})</td>
+                                    </ng-container>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.nom}}</td>
+                                    <td>{{item.annee}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="isEmpty">
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="card text-center mt-3">
+                                            <p class="mt-5 mb-2 text-danger">Aucun enregistrement !</p><br>
+                                            <p class="mb-5">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm waves-effect f-w-600 d-inline-block">
+                                        <i class="fa fa-refresh m-r-5"></i>rafraichir
+                                      </button>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <mfBootstrapPaginator class="pagination-main f-right"></mfBootstrapPaginator>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </app-card>
+        <!-- All ecs End -->
+    </div>
+</div>

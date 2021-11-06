@@ -1,0 +1,150 @@
+<!--Loading-->
+<div class="row col-md-12 mb-5">
+    <div class="col md-5">
+    </div>
+    <div class="col md-7">
+        <span *ngIf="loadEnseignantsEcs === true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </div>
+</div>
+<!--Loading-->
+<div class="row" *ngIf="loadEnseignantsEcs === false">
+    <div class="col-sm-12">
+        <!-- Tooltip Validation card start -->
+        <app-card [title]="'Enregistrement des Enseignants-ec'" [headerContent]="'Enseignants-ue enregistrés'">
+            <form [formGroup]="enseignantEcForm" (ngSubmit)="submitAction()">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Enseignant :</strong></label>
+                    <div class="col-sm-10">
+                        <select formControlName="eenseignant" name="eenseignant" id="eenseignant" class="form-control form-control" *ngIf="enseignants && enseignants.length > 0 " (change)="onEnseignantSelect($event)">
+                            <option value="">Sélectionner l'enseignant</option>
+                            <option *ngFor="let enseignant of enseignants" value="{{enseignant.idenseignant}}">{{enseignant.nom}} - {{enseignant.ville}}</option>
+                        </select>
+                        <select formControlName="eenseignant" name="eenseignant" id="eenseignant" class="form-control form-control" *ngIf="!enseignants || enseignants.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"><strong>Ec :</strong></label>
+                    <!-- <div class="col-sm-10">
+                        <select formControlName="eec" name="eec" id="eec" class="form-control form-control" *ngIf="ecs && ecs.length > 0 " (change)="onEcSelect($event)">
+                            <option value="">Sélectionner l'ec</option>
+                            <option *ngFor="let ec of ecs" value="{{ec.idec}}">{{ec.codeec}} - {{ec.nom}}</option>
+                        </select>
+                        <select formControlName="eec" name="eec" id="eec" class="form-control form-control" *ngIf="!ecs || ecs.length === 0 ">
+                            <option class="text-danger" disabled>Aucun enregistrement !</option>
+                        </select>
+                    </div> -->
+                    <div class="col-sm-10">
+                      <!-- <h4 class="sub-title">Multi Select</h4> -->
+                      <ng-select formControlName="eec" name="eec" id="eec" [ngClass]="'ng-select'" [options]="simpleOptionEc" [multiple]="true" *ngIf="ecs && ecs.length > 0 " (ngModelChange)="onEcSelect($event)"></ng-select>
+                      <p class="m-t-10">Vous pouvez Sélectionner plusieurs <code>Ec</code> et attribuer à un <code>Enseignant</code></p>
+                    </div>
+                </div>
+                <div class="row col-sm-12">
+                    <div [ngClass]="showCancelBtn === true?'col-sm-5':'col-sm-6'"></div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-outline-primary btn-sm waves-effect f-w-600 d-inline-block m-b-0" [disabled]="!enseignantEcForm.valid">
+                        <span *ngIf="createLoad === true" 
+                          class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                        </span>
+                        <span *ngIf="updateLoad === true" 
+                          class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true">
+                        </span>
+                        {{buttonAction}}
+                      </button>
+                        <button *ngIf="showCancelBtn === true || enseignantEcForm.dirty" type="reset" class="btn btn-outline-danger btn-sm waves-effect f-w-600 d-inline-block m-b-0 ml-2" (click)="reset()">Annuler</button>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+        <!-- Tooltip Validation card end -->
+
+        <!-- All classes Start-->
+        <app-card [title]="'Toutes les Enseignants-ec'" [headerContent]="'Enseignants-ec enregistrés'">
+            <div class="dt-responsive" *ngIf="enseignantsEcs">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+                        <div>
+                            <label class="label-control">Afficher
+                                <select class="form-control input-sm full-data-show-entry" [(ngModel)]="rowsOnPage">
+                                <option [ngValue]="10">10</option>
+                                <option [ngValue]="25">25</option>
+                                <option [ngValue]="50">50</option>
+                                <option [ngValue]="100">100</option>
+                                </select>
+                                entrées
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <div style="text-align: right;">
+                            <label>Rechercher:
+                                <input type="search" [(ngModel)]="searchText" class="form-control input-sm full-data-search" placeholder="Rechercher ici">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered full-data-table" [mfData]="enseignantsEcs | filter:searchText" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <mfDefaultSorter>Actions</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Enseignant</mfDefaultSorter>
+                                </th>
+                                <th>
+                                    <mfDefaultSorter>Ec</mfDefaultSorter>
+                                </th>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="!isEmpty">
+                                <tr *ngFor="let item of mf.data | filter:searchText">
+                                    <td class="action-icon">
+                                        <a href="javascript:;" class="m-r-15 crm-action-edit text-muted text-primary" (click)="fillFormBeforUpdating(item)"><i
+                                        class="icofont icofont-ui-edit"></i></a>
+                                        <a href="javascript:;" class="crm-action-delete text-muted text-danger" (click)="deleteEnseignantEc(item)"><i
+                                        class="icofont icofont-delete-alt"></i></a>
+                                    </td>
+                                    <ng-container *ngFor="let enseignant of enseignants | filter:searchText">
+                                        <td *ngIf="enseignant.idenseignant === item.idenseignant">{{enseignant.nom}} ({{enseignant.ville}})</td>
+                                    </ng-container>
+                                    <ng-container *ngFor="let ec of ecs | filter:searchText">
+                                        <td *ngIf="ec.idec === item.idec">{{ec.nom}} ({{ec.name}})</td>
+                                    </ng-container>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="isEmpty">
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="card text-center mt-3">
+                                            <p class="mt-5 mb-2 texxt-danger">Aucun enregistrement !</p><br>
+                                            <p class="mb-5">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm waves-effect f-w-600 d-inline-block">
+                                                    <i class="fa fa-refresh m-r-5"></i>rafraichir
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <mfBootstrapPaginator class="pagination-main f-right"></mfBootstrapPaginator>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </app-card>
+        <!-- All classes End -->
+    </div>
+</div>
